@@ -1,0 +1,43 @@
+[versions]
+android-gradle = "7.2.1"
+androidx-compose = "1.2.1"
+androidx-compose-compiler = "1.3.1"
+android-gradle-plugin = "7.2.2"
+androidx-lifecycle = "2.5.0"
+androidxtest = "1.4.0"
+kotlin = "1.7.10"
+kotlinx-coroutines = "1.6.4"
+mockk = "1.12.4"
+navigation = "2.5.2"
+
+[libraries]
+android-tools-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
+androidx-arch-core-testing = "androidx.arch.core:core-testing:2.1.0"
+androidx-benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.1.0"
+androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
+androidx-compose-uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+androidx-compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-compose" }
+androidx-compose-uiUtil = { module = "androidx.compose.ui:ui-util", version.ref = "androidx-compose" }
+androidx-core-ktx = "androidx.core:core-ktx:1.8.0"
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-navigation-navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+androidx-test-junit = "androidx.test.ext:junit-ktx:1.1.3"
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxtest" }
+androidx-uiautomator = "androidx.test.uiautomator:uiautomator:2.2.0"
+junit = "junit:junit:4.13.2"
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+mockk-library = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+android-test = { id = "com.android.test", version.ref = "android-gradle-plugin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
