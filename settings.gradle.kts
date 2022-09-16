@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "compose-components"
 include(":app")
-include(":components")
+include(":components:stepper")
