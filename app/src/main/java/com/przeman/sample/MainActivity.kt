@@ -1,4 +1,4 @@
-package com.przeman.sample.stepper
+package com.przeman.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

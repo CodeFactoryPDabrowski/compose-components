@@ -1,17 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Allows us to override night specific attributes in the
          values-night folder. -->
-    <style name="NightAdjusted.Theme.Stepper" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="NightAdjusted.Theme.Sample" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
     <!-- Allows us to override platform level specific attributes in their
          respective values-vXX folder. -->
-    <style name="PlatformAdjusted.Theme.Stepper" parent="NightAdjusted.Theme.Stepper">
+    <style name="PlatformAdjusted.Theme.Sample" parent="NightAdjusted.Theme.Sample">
         <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <!-- The final theme we use -->
-    <style name="Theme.Stepper" parent="PlatformAdjusted.Theme.Stepper" />
+    <style name="Theme.Sample" parent="PlatformAdjusted.Theme.Sample" />
 </resources>

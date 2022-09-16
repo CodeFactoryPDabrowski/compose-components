@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Stepper"
+rootProject.name = "compose-components"
 include(":app")

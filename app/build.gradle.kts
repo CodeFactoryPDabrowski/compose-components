@@ -5,7 +5,7 @@ plugins {
 
 android {
     defaultConfig {
-        applicationId = "com.przeman.stepper"
+        applicationId = "com.przeman.sample"
         versionCode = 1
         versionName = "0.0.1"
 

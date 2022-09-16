@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="PlatformAdjusted.Theme.Stepper" parent="NightAdjusted.Theme.Stepper">
+    <style name="PlatformAdjusted.Theme.Sample" parent="NightAdjusted.Theme.Sample">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
