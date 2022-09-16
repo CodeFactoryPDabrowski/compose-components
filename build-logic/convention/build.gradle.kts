@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.przeman.stepper.buildlogic"
+group = "com.przeman.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
