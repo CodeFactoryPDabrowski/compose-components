@@ -20,18 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
 import com.przeman.shared.SizeS
 import com.przeman.shared.SizeXS
+import com.przeman.stepper.internal.StepperItemsProvider
+import com.przeman.stepper.internal.rememberStateOfItemsProvider
 
 @Composable
-fun StepperColumn(
+fun Stepper(
     modifier: Modifier = Modifier,
     itemSpacing: Dp = SizeS,
     lineColor: Color,
     lineEffect: PathEffect?,
-    content: StepperColumnScope.() -> Unit,
+    content: StepperScope.() -> Unit,
 ) {
     val stateOfItemsProvider = rememberStateOfItemsProvider(content = content)
     val measurePolicy =
-        rememberStepperColumnMeasurePolicy(
+        rememberStepperMeasurePolicy(
             stateOfItemsProvider = stateOfItemsProvider,
             itemSpacing = itemSpacing,
             line = { height ->
@@ -47,8 +49,8 @@ fun StepperColumn(
 }
 
 @Composable
-private fun rememberStepperColumnMeasurePolicy(
-    stateOfItemsProvider: State<StepperColumnItemsProvider>,
+private fun rememberStepperMeasurePolicy(
+    stateOfItemsProvider: State<StepperItemsProvider>,
     itemSpacing: Dp,
     line: @Composable (Int) -> Unit,
 ): SubcomposeMeasureScope.(Constraints) -> MeasureResult {
@@ -61,7 +63,7 @@ private fun rememberStepperColumnMeasurePolicy(
                 }
             }
             val itemsPlaceables =
-                subcompose(StepperColumnSlots.Items, itemsContent).fastMap {
+                subcompose(StepperSlots.Items, itemsContent).fastMap {
                     it.measure(looseConstraints)
                 }
 
@@ -88,7 +90,7 @@ private fun rememberStepperColumnMeasurePolicy(
 
             layout(maxSize.width, maxSize.height) {
                 if (lineRange != null) {
-                    subcompose(StepperColumnSlots.Line) {
+                    subcompose(StepperSlots.Line) {
                         line(maxSize.height - lineRange.verticalPaddingPx)
                     }.forEach {
                         it.measure(constraints).placeRelative(
@@ -134,4 +136,4 @@ private class LineRange(val topPaddingPx: Int, val bottomPaddingPx: Int) {
     val verticalPaddingPx = topPaddingPx + bottomPaddingPx
 }
 
-private enum class StepperColumnSlots { Line, Items }
+private enum class StepperSlots { Line, Items }

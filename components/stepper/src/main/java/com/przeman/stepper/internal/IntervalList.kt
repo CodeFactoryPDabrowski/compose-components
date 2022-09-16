@@ -1,4 +1,4 @@
-package com.przeman.stepper
+package com.przeman.stepper.internal
 
 internal class IntervalHolder<T>(
     val startIndex: Int,

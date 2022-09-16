@@ -1,8 +1,11 @@
 package com.przeman.stepper
 
 import androidx.compose.runtime.Composable
+import com.przeman.stepper.internal.IntervalList
+import com.przeman.stepper.internal.MutableIntervalList
+import com.przeman.stepper.internal.StepperItem
 
-interface StepperColumnScope {
+interface StepperScope {
     fun items(
         count: Int,
         itemContent: @Composable (index: Int) -> Unit,
@@ -10,7 +13,7 @@ interface StepperColumnScope {
     )
 }
 
-inline fun <T> StepperColumnScope.items(
+inline fun <T> StepperScope.items(
     items: List<T>,
     crossinline itemContent: @Composable (item: T) -> Unit,
     crossinline indicatorContent: @Composable (item: T) -> Unit,
@@ -20,7 +23,7 @@ inline fun <T> StepperColumnScope.items(
     indicatorContent = { indicatorContent(items[it]) },
 )
 
-inline fun <T> StepperColumnScope.itemsIndexed(
+inline fun <T> StepperScope.itemsIndexed(
     items: List<T>,
     crossinline itemContent: @Composable (index: Int, item: T) -> Unit,
     crossinline indicatorContent: @Composable (index: Int, item: T) -> Unit,
@@ -34,10 +37,10 @@ inline fun <T> StepperColumnScope.itemsIndexed(
     },
 )
 
-internal class StepperColumnScopeImpl : StepperColumnScope {
+internal class StepperScopeImpl : StepperScope {
 
-    private val _intervals = MutableIntervalList<StepperColumnContent>()
-    val intervals: IntervalList<StepperColumnContent> = _intervals
+    private val _intervals = MutableIntervalList<StepperContent>()
+    val intervals: IntervalList<StepperContent> = _intervals
 
     override fun items(
         count: Int,
@@ -46,7 +49,7 @@ internal class StepperColumnScopeImpl : StepperColumnScope {
     ) {
         _intervals.add(
             count,
-            StepperColumnContent(
+            StepperContent(
                 content = { index ->
                     @Composable {
                         StepperItem(
@@ -59,6 +62,6 @@ internal class StepperColumnScopeImpl : StepperColumnScope {
     }
 }
 
-internal class StepperColumnContent(
+internal class StepperContent(
     val content: (index: Int) -> @Composable () -> Unit,
 )

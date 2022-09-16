@@ -1,4 +1,4 @@
-package com.przeman.stepper
+package com.przeman.stepper.internal
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
