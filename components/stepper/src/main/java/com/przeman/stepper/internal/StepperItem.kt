@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -16,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.przeman.shared.PreviewBox
 import com.przeman.shared.SizeM
@@ -23,11 +23,12 @@ import com.przeman.shared.SizeS
 
 @Composable
 internal fun StepperItem(
+    indicatorSize: Dp = SizeM,
     content: @Composable () -> Unit,
     indicator: (@Composable () -> Unit)? = null,
 ) {
     StepperItemRow {
-        Indicator(indicator)
+        Indicator(indicatorSize, indicator)
         Content(content)
     }
 }
@@ -37,7 +38,6 @@ private fun StepperItemRow(
     content: @Composable RowScope.() -> Unit,
 ) {
     Row(
-        Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         content = content
@@ -46,11 +46,12 @@ private fun StepperItemRow(
 
 @Composable
 private fun Indicator(
-    indicator: @Composable (() -> Unit)? = null,
+    indicatorSize: Dp,
+    indicator: (@Composable () -> Unit)? = null,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
-            Modifier.size(SizeM),
+            Modifier.size(indicatorSize),
             contentAlignment = Alignment.Center
         ) {
             if (indicator != null) {
@@ -62,9 +63,8 @@ private fun Indicator(
 }
 
 @Composable
-private fun RowScope.Content(content: @Composable () -> Unit) {
+private fun Content(content: @Composable () -> Unit) {
     Row(
-        Modifier.weight(1f),
         verticalAlignment = Alignment.CenterVertically
     ) {
         content()

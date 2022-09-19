@@ -1,6 +1,7 @@
 package com.przeman.stepper
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import com.przeman.stepper.internal.IntervalList
 import com.przeman.stepper.internal.MutableIntervalList
 import com.przeman.stepper.internal.StepperItem
@@ -37,7 +38,9 @@ inline fun <T> StepperScope.itemsIndexed(
     },
 )
 
-internal class StepperScopeImpl : StepperScope {
+internal class StepperScopeImpl(
+    private val indicatorSize: Dp,
+) : StepperScope {
 
     private val _intervals = MutableIntervalList<StepperContent>()
     val intervals: IntervalList<StepperContent> = _intervals
@@ -53,6 +56,7 @@ internal class StepperScopeImpl : StepperScope {
                 content = { index ->
                     @Composable {
                         StepperItem(
+                            indicatorSize = indicatorSize,
                             content = { itemContent(index) },
                             indicator = { indicatorContent?.invoke(index) }
                         )

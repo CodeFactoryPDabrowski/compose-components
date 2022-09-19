@@ -18,23 +18,28 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
+import com.przeman.shared.SizeM
 import com.przeman.shared.SizeS
-import com.przeman.shared.SizeXS
 import com.przeman.stepper.internal.StepperItemsProvider
 import com.przeman.stepper.internal.rememberStateOfItemsProvider
 
 @Composable
 fun Stepper(
     modifier: Modifier = Modifier,
+    indicatorSize: Dp = SizeM,
     itemSpacing: Dp = SizeS,
-    lineColor: Color,
+    lineColor: Color = Color.Black,
     lineEffect: PathEffect? = null,
     content: StepperScope.() -> Unit,
 ) {
-    val stateOfItemsProvider = rememberStateOfItemsProvider(content = content)
+    val stateOfItemsProvider = rememberStateOfItemsProvider(
+        indicatorSize = indicatorSize,
+        content = content
+    )
     val measurePolicy =
         rememberStepperMeasurePolicy(
             stateOfItemsProvider = stateOfItemsProvider,
+            indicatorSize = indicatorSize,
             itemSpacing = itemSpacing,
             line = { height ->
                 VerticalLine(
@@ -51,11 +56,13 @@ fun Stepper(
 @Composable
 private fun rememberStepperMeasurePolicy(
     stateOfItemsProvider: State<StepperItemsProvider>,
+    indicatorSize: Dp,
     itemSpacing: Dp,
     line: @Composable (Int) -> Unit,
 ): SubcomposeMeasureScope.(Constraints) -> MeasureResult {
-    return remember(itemSpacing) {
+    return remember(indicatorSize, itemSpacing) {
         { constraints ->
+            val indicatorMiddle = indicatorSize.div(2)
             val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
             val itemsContent = @Composable {
                 for (i in 0 until stateOfItemsProvider.value.itemsCount) {
@@ -94,7 +101,7 @@ private fun rememberStepperMeasurePolicy(
                         line(maxSize.height - lineRange.verticalPaddingPx)
                     }.forEach {
                         it.measure(constraints).placeRelative(
-                            x = SizeXS.roundToPx(), //Because StepperItem indicator has SizeM
+                            x = indicatorMiddle.roundToPx(),
                             y = lineRange.topPaddingPx
                         )
                     }

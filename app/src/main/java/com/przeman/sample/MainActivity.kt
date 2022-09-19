@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
@@ -16,9 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.przeman.stepper.Stepper
+import com.przeman.stepper.items
 import com.przeman.stepper.itemsIndexed
 
 class MainActivity : ComponentActivity() {
@@ -28,11 +31,13 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            Box(modifier = Modifier.statusBarsPadding()) {
-                Stepper(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    lineColor = Color.Black
-                ) {
+            Box(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Stepper {
                     itemsIndexed(
                         items = buildList {
                             add(StepperItem("Title1"))
@@ -45,7 +50,28 @@ class MainActivity : ComponentActivity() {
                             Text(text = item.title)
                         },
                         indicatorContent = { index, _ ->
-                            StepperIndicator(text = index.inc().toString())
+                            StepperIndicator(
+                                text = index.inc().toString(),
+                                shape = CircleShape
+                            )
+                        }
+                    )
+                    items(
+                        items = buildList {
+                            add(StepperItem(title = "Title6", indicator = "a"))
+                            add(StepperItem(title = "Title7", indicator = "b"))
+                            add(StepperItem(title = "Title8", indicator = "c"))
+                            add(StepperItem(title = "Title9", indicator = "d"))
+                            add(StepperItem(title = "Title10", indicator = "e"))
+                        },
+                        itemContent = { item ->
+                            Text(text = item.title)
+                        },
+                        indicatorContent = { item ->
+                            StepperIndicator(
+                                text = item.indicator,
+                                shape = RectangleShape
+                            )
                         }
                     )
                 }
@@ -55,17 +81,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun StepperIndicator(text: String) {
+private fun StepperIndicator(text: String, shape: Shape) {
     Box(
         Modifier
             .size(24.dp)
-            .clip(CircleShape)
-            .background(Color.White, CircleShape)
-            .border(1.dp, Color.Black, CircleShape),
+            .clip(shape)
+            .background(Color.White, shape)
+            .border(1.dp, Color.Black, shape),
         contentAlignment = Alignment.Center,
     ) {
         Text(text = text)
     }
 }
 
-data class StepperItem(val title: String)
+data class StepperItem(val title: String, val indicator: String = "")

@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.unit.Dp
 import com.przeman.stepper.StepperContent
 import com.przeman.stepper.StepperScope
 import com.przeman.stepper.StepperScopeImpl
@@ -16,12 +17,13 @@ internal interface StepperItemsProvider {
 
 @Composable
 internal fun rememberStateOfItemsProvider(
+    indicatorSize: Dp,
     content: StepperScope.() -> Unit,
 ): State<StepperItemsProvider> {
     val latestContent = rememberUpdatedState(content)
-    return remember {
+    return remember(indicatorSize) {
         derivedStateOf<StepperItemsProvider> {
-            val stepperScope = StepperScopeImpl().apply(latestContent.value)
+            val stepperScope = StepperScopeImpl(indicatorSize).apply(latestContent.value)
             StepperItemsProviderImpl(stepperScope.intervals)
         }
     }
