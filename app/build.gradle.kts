@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":components:stepper"))
+    implementation(project(":components:shared"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

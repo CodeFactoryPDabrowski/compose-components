@@ -28,7 +28,7 @@ fun Stepper(
     modifier: Modifier = Modifier,
     itemSpacing: Dp = SizeS,
     lineColor: Color,
-    lineEffect: PathEffect?,
+    lineEffect: PathEffect? = null,
     content: StepperScope.() -> Unit,
 ) {
     val stateOfItemsProvider = rememberStateOfItemsProvider(content = content)

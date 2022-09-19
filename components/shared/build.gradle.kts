@@ -8,4 +8,6 @@ dependencies {
     api(libs.androidx.compose.foundation.layout)
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.uiUtil)
+    api(libs.androidx.compose.uiToolingPreview)
+    debugApi(libs.androidx.compose.uiTooling)
 }
