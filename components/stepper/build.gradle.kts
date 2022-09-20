@@ -5,4 +5,5 @@ plugins {
 
 dependencies {
     implementation(project(":components:shared"))
+    debugImplementation(libs.bundles.androidx.compose.previewWorkaround)
 }
