@@ -1,6 +1,5 @@
 package com.przeman.progress
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.TweenSpec
@@ -90,7 +89,6 @@ fun Progress(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onValueChange: (Float) -> Unit = {},
     onValueChangeFinished: (() -> Unit)? = null,
-    steps: Int = 0,
 ) {
     val normalizedValue = value.coerceIn(valueRange.start, valueRange.endInclusive)
     val animationProgress by rememberInfiniteTransition().animateFloat(
@@ -98,11 +96,7 @@ fun Progress(
             animation = tween(1_000, easing = LinearEasing), repeatMode = RepeatMode.Restart
         )
     )
-
     val onValueChangeState = rememberUpdatedState(onValueChange)
-    val tickFractions = remember(steps) {
-        stepsToTickFractions(steps)
-    }
 
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -120,7 +114,6 @@ fun Progress(
         fun scaleToOffset(userValue: Float) =
             scale(valueRange.start, valueRange.endInclusive, userValue, minPx, maxPx)
 
-        val scope = rememberCoroutineScope()
         val rawOffset = remember { mutableStateOf(scaleToOffset(value)) }
         val pressOffset = remember { mutableStateOf(0f) }
 
@@ -135,21 +128,8 @@ fun Progress(
 
         CorrectValueSideEffect(::scaleToOffset, valueRange, minPx..maxPx, rawOffset, value)
 
-        val gestureEndAction = rememberUpdatedState<(Float) -> Unit> { velocity: Float ->
-            val current = rawOffset.value
-            val target =
-                snapValueToTick(current, tickFractions, minPx, maxPx)
-            if (current != target) {
-                scope.launch {
-                    animateToTarget(
-                        draggableState,
-                        current,
-                        target,
-                        velocity
-                    )
-                    onValueChangeFinished?.invoke()
-                }
-            } else if (!draggableState.isDragging) {
+        val gestureEndAction = rememberUpdatedState { _: Float ->
+            if (!draggableState.isDragging) {
                 // check ifDragging in case the change is still in progress (touch -> drag case)
                 onValueChangeFinished?.invoke()
             }
@@ -396,19 +376,6 @@ private class SliderDraggableState(
     }
 }
 
-private fun snapValueToTick(
-    current: Float,
-    tickFractions: List<Float>,
-    minPx: Float,
-    maxPx: Float
-): Float {
-    // target is a closest anchor to the `current`, if exists
-    return tickFractions
-        .minByOrNull { abs(lerp(minPx, maxPx, it) - current) }
-        ?.run { lerp(minPx, maxPx, this) }
-        ?: current
-}
-
 @Composable
 private fun CorrectValueSideEffect(
     scaleToOffset: (Float) -> Float,
@@ -473,24 +440,6 @@ private fun Modifier.sliderTapModifier(
     properties["pressOffset"] = pressOffset
     properties["enabled"] = enabled
 })
-
-private suspend fun animateToTarget(
-    draggableState: DraggableState, current: Float, target: Float, velocity: Float
-) {
-    draggableState.drag {
-        var latestValue = current
-        Animatable(initialValue = current).animateTo(target, SliderToTickAnimation, velocity) {
-            dragBy(this.value - latestValue)
-            latestValue = this.value
-        }
-    }
-}
-
-private fun stepsToTickFractions(steps: Int): List<Float> {
-    return if (steps == 0) emptyList() else List(steps + 2) { it.toFloat() / (steps + 1) }
-}
-
-private val SliderToTickAnimation = TweenSpec<Float>(durationMillis = 100)
 
 @Preview
 @Composable
