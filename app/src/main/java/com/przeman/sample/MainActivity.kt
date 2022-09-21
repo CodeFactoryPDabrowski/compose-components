@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +45,8 @@ class MainActivity : ComponentActivity() {
                     .padding(SizeM),
                 verticalArrangement = Arrangement.spacedBy(SizeM)
             ) {
+                val progress = remember { mutableStateOf(0.5f) }
+
                 Stepper {
                     itemsIndexed(items = buildList {
                         add(StepperItem("Title1"))
@@ -71,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         )
                     })
                 }
-                Progress(progress = 0.5f)
+                Progress(value = progress.value, onValueChange = { progress.value = it })
             }
         }
     }
