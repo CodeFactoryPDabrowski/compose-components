@@ -19,8 +19,7 @@ android {
         val release by getting {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
 
             // To publish on the Play store a private signing key is required, but to allow anyone
@@ -32,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":components:progress"))
     implementation(project(":components:stepper"))
     implementation(project(":components:shared"))
     implementation(libs.androidx.activity.compose)

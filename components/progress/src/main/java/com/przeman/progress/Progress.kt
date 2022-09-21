@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.przeman.shared.PreviewBox
@@ -38,16 +39,13 @@ import kotlin.math.sin
 fun Progress(
     modifier: Modifier = Modifier,
     progress: Float,
-    color: Color = Color.Green,
-    trackColor: Color = Color.LightGray,
+    color: Color = Color.DarkGray,
+    trackColor: Color = color.copy(alpha = 0.25f),
 ) {
     val normalizedProgress = progress.coerceIn(0f, 1f)
     val animationProgress by rememberInfiniteTransition().animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1_000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
+        initialValue = 0f, targetValue = 1f, animationSpec = infiniteRepeatable(
+            animation = tween(1_000, easing = LinearEasing), repeatMode = RepeatMode.Restart
         )
     )
     Canvas(
@@ -67,14 +65,31 @@ fun Progress(
             color = trackColor,
             strokeWidth = ProgressDefaults.progressThicknessDp.toPx()
         )
+        drawThumb(
+            startFraction = normalizedProgress,
+            endFraction = 1f,
+            color = color,
+        )
     }
 }
 
-private fun DrawScope.drawLinearIndicator(
+fun DrawScope.drawThumb(
     startFraction: Float,
     endFraction: Float,
     color: Color,
-    strokeWidth: Float
+    radius: Dp = ProgressDefaults.progressThicknessDp.times(3)
+) {
+    val width = size.width
+    val isLtr = layoutDirection == LayoutDirection.Ltr
+    val barStart = (if (isLtr) startFraction else endFraction - startFraction) * width
+
+    drawCircle(
+        color = color, radius = radius.toPx(), center = Offset(barStart, 0f),
+    )
+}
+
+private fun DrawScope.drawLinearIndicator(
+    startFraction: Float, endFraction: Float, color: Color, strokeWidth: Float,
 ) {
     val width = size.width
     val isLtr = layoutDirection == LayoutDirection.Ltr
@@ -91,10 +106,7 @@ private fun DrawScope.drawLinearIndicator(
 }
 
 private fun DrawScope.drawSineIndicator(
-    startFraction: Float,
-    endFraction: Float,
-    color: Color,
-    animationProgress: Float
+    startFraction: Float, endFraction: Float, color: Color, animationProgress: Float,
 ) {
     val pathStyle = Stroke(
         width = ProgressDefaults.progressThicknessDp.toPx(),
@@ -108,9 +120,7 @@ private fun DrawScope.drawSineIndicator(
         path = buildSinePath(
             startFraction = startFraction,
             endFraction = endFraction,
-            waveOffset = (2 * Math.PI *
-                    (if (isLtr) animationProgress else animationProgress.unaryMinus()))
-                .toFloat()
+            waveOffset = (2 * Math.PI * (if (isLtr) animationProgress else animationProgress.unaryMinus())).toFloat()
 
         ),
         color = color,
@@ -118,9 +128,7 @@ private fun DrawScope.drawSineIndicator(
 }
 
 private fun DrawScope.buildSinePath(
-    startFraction: Float,
-    endFraction: Float,
-    waveOffset: Float = 0f
+    startFraction: Float, endFraction: Float, waveOffset: Float = 0f,
 ): Path {
     val width = size.width
     val height = size.height
@@ -163,8 +171,7 @@ private object ProgressDefaults {
 private fun ProgressPreview() {
     PreviewBox {
         Column(
-            modifier = Modifier.padding(SizeS),
-            verticalArrangement = Arrangement.spacedBy(SizeM)
+            modifier = Modifier.padding(SizeS), verticalArrangement = Arrangement.spacedBy(SizeM)
         ) {
             Progress(progress = 0.5f)
             Progress(progress = 0.9f)
