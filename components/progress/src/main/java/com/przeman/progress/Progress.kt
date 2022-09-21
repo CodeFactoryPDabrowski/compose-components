@@ -56,13 +56,20 @@ fun Progress(
             .fillMaxWidth()
     ) {
         drawSineIndicator(
+            startFraction = 0f,
+            endFraction = normalizedProgress,
             color = color,
             animationProgress = animationProgress,
+        )
+        drawLinearIndicator(
+            startFraction = normalizedProgress,
+            endFraction = 1f,
+            color = trackColor,
+            strokeWidth = ProgressDefaults.progressThicknessDp.toPx()
         )
     }
 }
 
-//TODO: Use later
 private fun DrawScope.drawLinearIndicator(
     startFraction: Float,
     endFraction: Float,
@@ -71,8 +78,8 @@ private fun DrawScope.drawLinearIndicator(
 ) {
     val width = size.width
     val isLtr = layoutDirection == LayoutDirection.Ltr
-    val barStart = (if (isLtr) startFraction else 1f - endFraction) * width
-    val barEnd = (if (isLtr) endFraction else 1f - startFraction) * width
+    val barStart = (if (isLtr) startFraction else 0f) * width
+    val barEnd = (if (isLtr) endFraction - startFraction else startFraction) * width
     val cornerRadius = strokeWidth / 2
 
     drawRoundRect(
@@ -84,6 +91,8 @@ private fun DrawScope.drawLinearIndicator(
 }
 
 private fun DrawScope.drawSineIndicator(
+    startFraction: Float,
+    endFraction: Float,
     color: Color,
     animationProgress: Float
 ) {
@@ -93,12 +102,16 @@ private fun DrawScope.drawSineIndicator(
         cap = StrokeCap.Round,
         pathEffect = PathEffect.cornerPathEffect(radius = ProgressDefaults.wavelengthDp.toPx()),
     )
+    val isLtr = layoutDirection == LayoutDirection.Ltr
     drawPath(
         style = pathStyle,
         path = buildSinePath(
-            startFraction = 0f, //TODO: proper progress!
-            endFraction = 1f,
-            waveOffset = (2 * Math.PI * animationProgress).toFloat(),
+            startFraction = startFraction,
+            endFraction = endFraction,
+            waveOffset = (2 * Math.PI *
+                    (if (isLtr) animationProgress else animationProgress.unaryMinus()))
+                .toFloat()
+
         ),
         color = color,
     )
@@ -153,7 +166,9 @@ private fun ProgressPreview() {
             modifier = Modifier.padding(SizeS),
             verticalArrangement = Arrangement.spacedBy(SizeM)
         ) {
-            Progress(progress = 0f)
+            Progress(progress = 0.5f)
+            Progress(progress = 0.9f)
+            Progress(progress = 0.2f)
         }
     }
 }
