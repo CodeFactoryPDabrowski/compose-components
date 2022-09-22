@@ -2,7 +2,6 @@ package com.przeman.progress
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -13,15 +12,9 @@ import androidx.compose.foundation.MutatorMutex
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.DragScope
 import androidx.compose.foundation.gestures.DraggableState
-import androidx.compose.foundation.gestures.GestureCancellationException
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.DragInteraction
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -31,23 +24,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -58,20 +45,18 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import com.przeman.progress.internal.pressModifier
 import com.przeman.shared.PreviewBox
 import com.przeman.shared.SizeM
 import com.przeman.shared.SizeS
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.max
@@ -118,11 +103,11 @@ fun Progress(
         val pressOffset = remember { mutableStateOf(0f) }
 
         val draggableState = remember(minPx, maxPx, valueRange) {
-            SliderDraggableState {
+            ProgressDraggableState {
                 rawOffset.value = (rawOffset.value + it + pressOffset.value)
                 pressOffset.value = 0f
                 val offsetInTrack = rawOffset.value.coerceIn(minPx, maxPx)
-                onValueChangeState.value.invoke(scaleToUserValue(offsetInTrack))
+                onValueChangeState.value(scaleToUserValue(offsetInTrack))
             }
         }
 
@@ -135,7 +120,7 @@ fun Progress(
             }
         }
 
-        val press = Modifier.sliderTapModifier(
+        val press = Modifier.pressModifier(
             draggableState,
             interactionSource,
             widthPx,
@@ -169,7 +154,7 @@ fun Progress(
             trackColor = trackColor,
             animationProgress = animationProgress,
             width = maxPx - minPx,
-            interactionSource = interactionSource,
+            isDragging = draggableState.isDragging,
         )
     }
 }
@@ -182,7 +167,7 @@ private fun ProgressImpl(
     trackColor: Color,
     animationProgress: Float,
     width: Float,
-    interactionSource: MutableInteractionSource,
+    isDragging: Boolean,
 ) {
     Box(modifier) {
         val widthDp: Dp
@@ -196,8 +181,9 @@ private fun ProgressImpl(
             color = color,
             animationProgress = animationProgress,
             trackColor = trackColor,
+            isDragging = isDragging,
         )
-        Thumb(offset = offset, color = color, interactionSource = interactionSource)
+        Thumb(offset = offset, color = color)
     }
 }
 
@@ -207,20 +193,31 @@ private fun BoxScope.Track(
     color: Color,
     animationProgress: Float,
     trackColor: Color,
+    isDragging: Boolean,
 ) {
     Canvas(
         Modifier
-            .progressSemantics(fraction)
             .fillMaxWidth()
+            .padding(horizontal = ProgressDefaults.thumbRadius)
             .align(Alignment.Center)
     ) {
-        drawSineIndicator(
-            startFraction = 0f,
-            endFraction = fraction,
-            color = color,
-            animationProgress = animationProgress,
-        )
-        drawLinearIndicator(
+        if (isDragging) {
+            drawLine(
+                startFraction = 0f,
+                endFraction = fraction,
+                color = color,
+                strokeWidth = ProgressDefaults.progressThicknessDp.toPx()
+            )
+        } else {
+            drawSine(
+                startFraction = 0f,
+                endFraction = fraction,
+                color = color,
+                animationProgress = animationProgress,
+            )
+        }
+
+        drawLine(
             startFraction = fraction,
             endFraction = 1f,
             color = trackColor,
@@ -233,37 +230,21 @@ private fun BoxScope.Track(
 private fun BoxScope.Thumb(
     offset: Dp,
     color: Color,
-    interactionSource: MutableInteractionSource,
 ) {
     Box(
         Modifier
             .padding(start = offset)
             .align(Alignment.CenterStart)
     ) {
-        val interactions = remember { mutableStateListOf<Interaction>() }
-        LaunchedEffect(interactionSource) {
-            interactionSource.interactions.collect { interaction ->
-                when (interaction) {
-                    is PressInteraction.Press -> interactions.add(interaction)
-                    is PressInteraction.Release -> interactions.remove(interaction.press)
-                    is PressInteraction.Cancel -> interactions.remove(interaction.press)
-                    is DragInteraction.Start -> interactions.add(interaction)
-                    is DragInteraction.Stop -> interactions.remove(interaction.start)
-                    is DragInteraction.Cancel -> interactions.remove(interaction.start)
-                }
-            }
-        }
-
         Spacer(
             Modifier
                 .size(ProgressDefaults.thumbRadius.times(2))
-                .hoverable(interactionSource = interactionSource)
                 .background(color, CircleShape)
         )
     }
 }
 
-private fun DrawScope.drawLinearIndicator(
+private fun DrawScope.drawLine(
     startFraction: Float, endFraction: Float, color: Color, strokeWidth: Float,
 ) {
     val width = size.width
@@ -280,7 +261,7 @@ private fun DrawScope.drawLinearIndicator(
     )
 }
 
-private fun DrawScope.drawSineIndicator(
+private fun DrawScope.drawSine(
     startFraction: Float, endFraction: Float, color: Color, animationProgress: Float,
 ) {
     val pathStyle = Stroke(
@@ -296,7 +277,6 @@ private fun DrawScope.drawSineIndicator(
             startFraction = startFraction,
             endFraction = endFraction,
             waveOffset = (2 * Math.PI * (if (isLtr) animationProgress else animationProgress.unaryMinus())).toFloat()
-
         ),
         color = color,
     )
@@ -350,7 +330,7 @@ private fun scale(a1: Float, b1: Float, x1: Float, a2: Float, b2: Float) =
 private fun calcFraction(a: Float, b: Float, pos: Float) =
     (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
 
-private class SliderDraggableState(
+private class ProgressDraggableState(
     val onDelta: (Float) -> Unit
 ) : DraggableState {
 
@@ -394,52 +374,6 @@ private fun CorrectValueSideEffect(
         }
     }
 }
-
-private fun Modifier.sliderTapModifier(
-    draggableState: DraggableState,
-    interactionSource: MutableInteractionSource,
-    maxPx: Float,
-    isRtl: Boolean,
-    rawOffset: State<Float>,
-    gestureEndAction: State<(Float) -> Unit>,
-    pressOffset: MutableState<Float>,
-    enabled: Boolean
-) = composed(factory = {
-    if (enabled) {
-        val scope = rememberCoroutineScope()
-        pointerInput(draggableState, interactionSource, maxPx, isRtl) {
-            detectTapGestures(onPress = { pos ->
-                val to = if (isRtl) maxPx - pos.x else pos.x
-                pressOffset.value = to - rawOffset.value
-                try {
-                    awaitRelease()
-                } catch (_: GestureCancellationException) {
-                    pressOffset.value = 0f
-                }
-            }, onTap = {
-                scope.launch {
-                    draggableState.drag(MutatePriority.UserInput) {
-                        // just trigger animation, press offset will be applied
-                        dragBy(0f)
-                    }
-                    gestureEndAction.value.invoke(0f)
-                }
-            })
-        }
-    } else {
-        this
-    }
-}, inspectorInfo = debugInspectorInfo {
-    name = "sliderTapModifier"
-    properties["draggableState"] = draggableState
-    properties["interactionSource"] = interactionSource
-    properties["maxPx"] = maxPx
-    properties["isRtl"] = isRtl
-    properties["rawOffset"] = rawOffset
-    properties["gestureEndAction"] = gestureEndAction
-    properties["pressOffset"] = pressOffset
-    properties["enabled"] = enabled
-})
 
 @Preview
 @Composable
