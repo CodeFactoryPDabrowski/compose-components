@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -23,7 +24,12 @@ import com.przeman.shared.SizeM
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    HomeContent { screen -> navController.navigate(screen) }
+    val presenter = remember {
+        HomePresenter(onNavigationChange = { navController.navigate(it) })
+    }
+    val param = presenter.present()
+
+    HomeContent { screen -> param.onSink(Event.ClickedItem(screen)) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
