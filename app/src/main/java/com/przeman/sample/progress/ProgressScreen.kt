@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +17,15 @@ import com.przeman.shared.SizeM
 
 @Composable
 fun ProgressScreen() {
-    val progress = remember { mutableStateOf(0.5f) }
-    ProgressContent(progressValue = progress.value, onValueChange = { progress.value = it })
+    val presenter = remember {
+        ProgressPresenter()
+    }
+    val param = presenter.present()
+
+    ProgressContent(
+        progressValue = param.progress,
+        onValueChange = { param.onSink(Event.ProgressChange(it)) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
