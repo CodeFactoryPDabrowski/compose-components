@@ -2,14 +2,26 @@ package com.przeman.sample.stepper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.produceState
 import com.przeman.sample.arch.Presenter
 import com.przeman.sample.arch.UiParam
+import com.przeman.sample.stepper.data.StepperItemRepository
+import kotlinx.coroutines.flow.collectLatest
 
-class StepperPresenter : Presenter<StepperParam> {
+class StepperPresenter(
+    private val repo: StepperItemRepository,
+) : Presenter<StepperParam> {
 
     @Composable
     override fun present(): StepperParam {
-        TODO("Not yet implemented")
+        val state = produceState(initialValue = StepperParam(emptyList()), key1 = repo, producer = {
+            repo.generate().collectLatest { items ->
+                value = StepperParam(items.map {
+                    StepperItem(title = it.text, indicator = it.indicator)
+                })
+            }
+        })
+        return state.value
     }
 }
 
