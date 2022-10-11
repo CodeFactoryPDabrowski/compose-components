@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(project(":components:progress"))
+    implementation(project(":components:retained"))
     implementation(project(":components:stepper"))
     implementation(project(":components:shared"))
     implementation(libs.androidx.activity.compose)

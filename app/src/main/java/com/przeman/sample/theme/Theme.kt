@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.przeman.retained.RetainedCompositionLocals
 
 private val LightColors = lightColorScheme(
     primary = Black,
@@ -40,5 +41,5 @@ fun SampleTheme(useDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
         DarkColors
     }
 
-    MaterialTheme(colorScheme = colors, content = content)
+    MaterialTheme(colorScheme = colors) { RetainedCompositionLocals(content = content) }
 }

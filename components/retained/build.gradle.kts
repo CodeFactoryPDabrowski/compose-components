@@ -5,4 +5,6 @@ plugins {
 
 dependencies {
     implementation(project(":components:shared"))
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
 }

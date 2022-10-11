@@ -2,7 +2,7 @@ package com.przeman.sample.progress
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import com.przeman.retained.rememberRetained
 import com.przeman.sample.arch.Presenter
 import com.przeman.sample.arch.UiEvent
 import com.przeman.sample.arch.UiParam
@@ -11,7 +11,7 @@ class ProgressPresenter : Presenter<ProgressParam> {
 
     @Composable
     override fun present(): ProgressParam {
-        val progressValue = remember {
+        val progressValue = rememberRetained {
             mutableStateOf(0.5f)
         }
         return ProgressParam(progressValue.value) { event ->
