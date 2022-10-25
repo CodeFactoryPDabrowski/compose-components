@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.onEach
 
 class StepperItemRepository {
 
-    fun generate(): Flow<List<StepperItemDTO>> {
-        val stepperItems = mutableListOf<StepperItemDTO>()
-        return (1..20).asSequence().asFlow().onEach { delay(1_000) }.map {
-            stepperItems.add(StepperItemDTO("Item $it", "$it"))
-            stepperItems
+    fun generate(initial: List<StepperItemDTO>): Flow<List<StepperItemDTO>> {
+        val update = initial.toMutableList()
+        return (initial.size..20).asSequence().asFlow().onEach { delay(1_000) }.map {
+            update.add(StepperItemDTO("Item $it", "$it"))
+            update.toList()
         }
     }
 }
