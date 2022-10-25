@@ -29,6 +29,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    namespace = "com.przeman.sample"
 }
 
 dependencies {

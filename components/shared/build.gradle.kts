@@ -3,6 +3,10 @@ plugins {
     id("android.library.compose")
 }
 
+android {
+    namespace = "com.przeman.shared"
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     api(libs.androidx.compose.ui)
