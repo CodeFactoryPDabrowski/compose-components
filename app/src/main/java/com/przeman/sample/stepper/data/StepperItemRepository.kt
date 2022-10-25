@@ -12,7 +12,7 @@ class StepperItemRepository {
         val update = initial.toMutableList()
         return (initial.size..20).asSequence().asFlow().onEach { delay(1_000) }.map {
             update.add(StepperItemDTO("Item $it", "$it"))
-            update.toList()
+            update.toList()// Mutable list doesn't call recomposition because it's still the same list -> new immutable list is the solution for this issue
         }
     }
 }
