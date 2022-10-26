@@ -45,7 +45,7 @@ fun <T : Any> rememberRetained(vararg inputs: Any?, key: String? = null, init: (
 
     val canRetain = rememberCanRetainChecker()
     remember(registry, finalKey) {
-        val entry = registry.registerValue(finalKey, valueState.value)
+        val entry = registry.registerValue(finalKey) { valueState.value }
         object : RememberObserver {
             override fun onAbandoned() = unregisterIfNotRetainable()
 
