@@ -9,7 +9,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
  * Allows components to save and restore their state using the `onRetainNonConfigurationInstance`
  * mechanism.
  */
-internal interface RetainedStateRegistry {
+interface RetainedStateRegistry {
     /**
      * Returns the restored value for the given key. Once being restored the value is cleared, so you
      * can't restore the same key twice.

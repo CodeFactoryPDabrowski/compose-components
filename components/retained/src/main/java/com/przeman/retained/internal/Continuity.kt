@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-internal class Continuity : ViewModel(), RetainedStateRegistry {
+class Continuity : ViewModel(), RetainedStateRegistry {
     private val delegate = RetainedStateRegistryImpl(null)
 
     override fun consumeValue(key: String): Any? {

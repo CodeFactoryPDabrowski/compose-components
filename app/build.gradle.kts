@@ -2,6 +2,8 @@ plugins {
     id("android.application")
     id("android.application.compose")
     id("app.cash.molecule")
+    kotlin("kapt")
+    alias(libs.plugins.anvil)
 }
 
 android {
@@ -33,10 +35,12 @@ android {
 }
 
 dependencies {
+    kapt(libs.dagger.compiler)
     implementation(project(":components:progress"))
     implementation(project(":components:retained"))
     implementation(project(":components:stepper"))
     implementation(project(":components:shared"))
+    implementation(libs.dagger)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
