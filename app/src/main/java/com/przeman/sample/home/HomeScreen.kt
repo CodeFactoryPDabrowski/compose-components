@@ -20,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.przeman.sample.progress.navigation.progressRoute
+import com.przeman.sample.stepper.navigation.stepperRoute
 import com.przeman.shared.SizeM
 
 @Composable
@@ -56,10 +58,10 @@ private fun HomeContent(onNavigationChange: (String) -> Unit) {
             Spacer(modifier = Modifier.height(SizeM))
 
             TextButton(text = "Stepper") {
-                onNavigationChange("stepper")
+                onNavigationChange(stepperRoute)
             }
             TextButton(text = "Progress") {
-                onNavigationChange("progress")
+                onNavigationChange(progressRoute)
             }
         }
     }
