@@ -19,15 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.przeman.sample.progress.navigation.progressRoute
-import com.przeman.sample.stepper.navigation.stepperRoute
+import com.przeman.sample.navigation.Destination
+import com.przeman.sample.navigation.Navigator
+import com.przeman.sample.progress.navigation.ProgressDestination
+import com.przeman.sample.stepper.navigation.StepperDestination
 import com.przeman.shared.SizeM
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navigator: Navigator) {
     val presenter = remember {
-        HomePresenter(onNavigationChange = { navController.navigate(it) })
+        HomePresenter(navigator)
     }
     val param = presenter.present()
 
@@ -36,12 +37,11 @@ fun HomeScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeContent(onNavigationChange: (String) -> Unit) {
-    Scaffold(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .systemBarsPadding()
-            .fillMaxWidth(),
+private fun HomeContent(onNavigationChange: (Destination) -> Unit) {
+    Scaffold(modifier = Modifier
+        .navigationBarsPadding()
+        .systemBarsPadding()
+        .fillMaxWidth(),
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(modifier = Modifier.padding(horizontal = SizeM), text = "Compose components")
@@ -58,10 +58,10 @@ private fun HomeContent(onNavigationChange: (String) -> Unit) {
             Spacer(modifier = Modifier.height(SizeM))
 
             TextButton(text = "Stepper") {
-                onNavigationChange(stepperRoute)
+                onNavigationChange(StepperDestination())
             }
             TextButton(text = "Progress") {
-                onNavigationChange(progressRoute)
+                onNavigationChange(ProgressDestination())
             }
         }
     }

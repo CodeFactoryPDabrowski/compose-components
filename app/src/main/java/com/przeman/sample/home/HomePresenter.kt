@@ -4,14 +4,16 @@ import androidx.compose.runtime.Composable
 import com.przeman.sample.arch.Presenter
 import com.przeman.sample.arch.UiEvent
 import com.przeman.sample.arch.UiParam
+import com.przeman.sample.navigation.Destination
+import com.przeman.sample.navigation.Navigator
 
 //TODO: DI, Navigation! Just for testing
-class HomePresenter(private val onNavigationChange: (String) -> Unit) : Presenter<HomeParam> {
+class HomePresenter(private val navigator: Navigator) : Presenter<HomeParam> {
     @Composable
     override fun present(): HomeParam {
         return HomeParam { event ->
             when (event) {
-                is Event.ClickedItem -> onNavigationChange(event.route)
+                is Event.ClickedItem -> navigator.gotTo(event.destination)
             }
         }
     }
@@ -20,5 +22,5 @@ class HomePresenter(private val onNavigationChange: (String) -> Unit) : Presente
 data class HomeParam(val onSink: (Event) -> Unit) : UiParam
 
 sealed interface Event : UiEvent {
-    data class ClickedItem(val route: String) : Event
+    data class ClickedItem(val destination: Destination) : Event
 }
