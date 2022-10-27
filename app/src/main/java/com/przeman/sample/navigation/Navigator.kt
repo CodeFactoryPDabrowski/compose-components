@@ -3,6 +3,7 @@ package com.przeman.sample.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
+import com.przeman.sample.arch.Navigator
 
 @Composable
 fun rememberNavigator(
@@ -11,18 +12,12 @@ fun rememberNavigator(
     return remember { NavigatorImpl(navController) }
 }
 
-interface Navigator {
-
-    fun gotTo(destination: Destination)
-
-    fun goBack()
-}
 
 private class NavigatorImpl(
     private val navController: NavController
 ) : Navigator {
 
-    override fun gotTo(destination: Destination) {
+    override fun gotTo(destination: Navigator.Destination) {
         navController.navigate(destination.route, null) //TODO: Handle nav options if needed
     }
 
@@ -30,8 +25,4 @@ private class NavigatorImpl(
         navController.popBackStack()
     }
 
-}
-
-interface Destination {
-    val route: String
 }

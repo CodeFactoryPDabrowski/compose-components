@@ -1,14 +1,17 @@
 package com.przeman.sample.home
 
 import androidx.compose.runtime.Composable
+import com.przeman.sample.arch.Navigator
 import com.przeman.sample.arch.Presenter
 import com.przeman.sample.arch.UiEvent
 import com.przeman.sample.arch.UiParam
-import com.przeman.sample.navigation.Destination
-import com.przeman.sample.navigation.Navigator
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-//TODO: DI, Navigation! Just for testing
-class HomePresenter(private val navigator: Navigator) : Presenter<HomeParam> {
+class HomePresenter @AssistedInject constructor(
+    @Assisted private val navigator: Navigator
+) : Presenter<HomeParam> {
     @Composable
     override fun present(): HomeParam {
         return HomeParam { event ->
@@ -17,10 +20,15 @@ class HomePresenter(private val navigator: Navigator) : Presenter<HomeParam> {
             }
         }
     }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(navigator: Navigator): HomePresenter
+    }
 }
 
 data class HomeParam(val onSink: (Event) -> Unit) : UiParam
 
 sealed interface Event : UiEvent {
-    data class ClickedItem(val destination: Destination) : Event
+    data class ClickedItem(val destination: Navigator.Destination) : Event
 }

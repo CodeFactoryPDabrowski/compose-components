@@ -16,20 +16,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.przeman.sample.navigation.Destination
-import com.przeman.sample.navigation.Navigator
+import com.przeman.sample.arch.Navigator
 import com.przeman.sample.progress.navigation.ProgressDestination
 import com.przeman.sample.stepper.navigation.StepperDestination
 import com.przeman.shared.SizeM
 
 @Composable
-fun HomeScreen(navigator: Navigator) {
-    val presenter = remember {
-        HomePresenter(navigator)
-    }
+fun HomeScreen(presenter: HomePresenter) {
     val param = presenter.present()
 
     HomeContent { screen -> param.onSink(Event.ClickedItem(screen)) }
@@ -37,7 +32,7 @@ fun HomeScreen(navigator: Navigator) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeContent(onNavigationChange: (Destination) -> Unit) {
+private fun HomeContent(onNavigationChange: (Navigator.Destination) -> Unit) {
     Scaffold(modifier = Modifier
         .navigationBarsPadding()
         .systemBarsPadding()
