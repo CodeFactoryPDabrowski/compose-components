@@ -8,8 +8,9 @@ import com.przeman.arch.Presenter
 import com.przeman.arch.UiParam
 import com.przeman.sample.stepper.data.StepperItemRepository
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
-class StepperPresenter(
+class StepperPresenter @Inject constructor(
     private val repo: StepperItemRepository,
 ) : Presenter<StepperParam> {
 

@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class StepperItemRepository {
+class StepperItemRepository @Inject constructor() {
 
     fun generate(initial: List<StepperItemDTO>): Flow<List<StepperItemDTO>> {
         val update = initial.toMutableList()

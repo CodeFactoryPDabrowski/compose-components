@@ -16,20 +16,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.przeman.sample.stepper.data.StepperItemRepository
 import com.przeman.shared.SizeM
 import com.przeman.stepper.Stepper
 import com.przeman.stepper.items
 
 @Composable
-fun StepperScreen() {
-    val presenter = remember { StepperPresenter(StepperItemRepository()) }
+fun StepperScreen(presenter: StepperPresenter) {
     val param = presenter.present()
 
     StepperContent(param)
