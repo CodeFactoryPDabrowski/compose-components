@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "compose-components"
 include(":app")
+include(":arch")
 include(":components:progress")
 include(":components:retained")
 include(":components:shared")

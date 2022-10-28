@@ -36,6 +36,7 @@ android {
 
 dependencies {
     kapt(libs.dagger.compiler)
+    implementation(project(":arch"))
     implementation(project(":components:progress"))
     implementation(project(":components:retained"))
     implementation(project(":components:stepper"))

@@ -3,9 +3,9 @@ package com.przeman.sample.progress
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import com.przeman.retained.rememberRetained
-import com.przeman.sample.arch.Presenter
-import com.przeman.sample.arch.UiEvent
-import com.przeman.sample.arch.UiParam
+import com.przeman.arch.Presenter
+import com.przeman.arch.UiEvent
+import com.przeman.arch.UiParam
 
 class ProgressPresenter : Presenter<ProgressParam> {
 

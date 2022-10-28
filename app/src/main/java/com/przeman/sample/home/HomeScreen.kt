@@ -18,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.przeman.sample.arch.Navigator
+import com.przeman.arch.Navigator
 import com.przeman.sample.progress.navigation.ProgressDestination
 import com.przeman.sample.stepper.navigation.StepperDestination
 import com.przeman.shared.SizeM

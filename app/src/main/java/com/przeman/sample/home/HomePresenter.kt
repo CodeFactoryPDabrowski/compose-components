@@ -1,10 +1,10 @@
 package com.przeman.sample.home
 
 import androidx.compose.runtime.Composable
-import com.przeman.sample.arch.Navigator
-import com.przeman.sample.arch.Presenter
-import com.przeman.sample.arch.UiEvent
-import com.przeman.sample.arch.UiParam
+import com.przeman.arch.Navigator
+import com.przeman.arch.Presenter
+import com.przeman.arch.UiEvent
+import com.przeman.arch.UiParam
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

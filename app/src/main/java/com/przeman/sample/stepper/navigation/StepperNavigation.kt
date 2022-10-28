@@ -2,7 +2,7 @@ package com.przeman.sample.stepper.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.przeman.sample.arch.Navigator
+import com.przeman.arch.Navigator
 import com.przeman.sample.stepper.StepperScreen
 
 const val stepperRoute = "stepper_route"

@@ -3,7 +3,7 @@ package com.przeman.sample.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
-import com.przeman.sample.arch.Navigator
+import com.przeman.arch.Navigator
 
 @Composable
 fun rememberNavigator(

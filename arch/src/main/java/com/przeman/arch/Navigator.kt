@@ -1,4 +1,4 @@
-package com.przeman.sample.arch
+package com.przeman.arch
 
 interface Navigator {
 

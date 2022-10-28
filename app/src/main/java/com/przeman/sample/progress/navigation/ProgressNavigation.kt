@@ -2,7 +2,7 @@ package com.przeman.sample.progress.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.przeman.sample.arch.Navigator
+import com.przeman.arch.Navigator
 import com.przeman.sample.progress.ProgressScreen
 
 const val progressRoute = "progress_route"
